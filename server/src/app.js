@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-
 import warehouseRoutes from "./modules/warehouse/warehouse.routes.js";
+import locationRoutes from "./modules/location/location.routes.js";
 import receiptRoutes from "./modules/receipt/receipt.routes.js";
 import stockRoutes from "./modules/stock/stock.route.js";
 import deliveryRoutes from "./modules/delivery/delivery.route.js";
@@ -17,8 +17,10 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api", warehouseRoutes);
+app.use("/api", locationRoutes);
 app.use("/api", receiptRoutes);
 app.use("/api", stockRoutes);
 app.use("/api", deliveryRoutes);
+
 
 export default app;

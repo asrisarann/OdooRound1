@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import prisma from "../../config/prisma.js";
 
 /**
  * Generate next sequence for receiptNumber in the format WH/IN/0001
@@ -9,71 +9,6 @@ const generateReceiptNumber = async () => {
   return `WH/IN/${nextNum}`;
 };
 
-// GET /api/receipts
-export const getAllReceipts = async (req, res) => {
-  try {
-    const page = Math.max(1, parseInt(req.query.page || "1", 10));
-    const limit = Math.max(1, parseInt(req.query.limit || "10", 10));
-    const skip = (page - 1) * limit;
-
-    const { status, search } = req.query;
-    const where = {};
-
-    if (status) {
-      where.status = status;
-    }
-
-    if (search) {
-      where.OR = [
-        { receiptNumber: { contains: search, mode: "insensitive" } },
-        { supplierName: { contains: search, mode: "insensitive" } },
-      ];
-    }
-
-    const [total, receipts] = await Promise.all([
-      prisma.receipt.count({ where }),
-      prisma.receipt.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        include: {
-          createdBy: {
-            select: { id: true, name: true, email: true },
-          },
-          items: {
-            include: {
-              product: {
-                select: { id: true, name: true, sku: true, unit: true },
-              },
-              location: {
-                select: {
-                  id: true,
-                  name: true,
-                  code: true,
-                  warehouse: { select: { id: true, name: true, code: true } },
-                },
-              },
-            },
-          },
-        },
-      }),
-    ]);
-
-    return res.status(200).json({
-      success: true,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-      data: receipts,
-    });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
 
 // GET /api/receipts/:id
 export const getReceiptById = async (req, res) => {
