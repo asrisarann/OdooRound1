@@ -1,0 +1,1 @@
+export { default, prisma } from "../config/prisma.js";
