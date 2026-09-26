@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import warehouseRoutes from "./module/warehouse/warehouse.routes.js";
+import locationRoutes from "./module/location/location.routes.js";
 
 const app = express();
 app.use(cors());
@@ -13,5 +14,7 @@ app.get("/", (req, res) => {
 
 // Warehouse module
 app.use("/api", warehouseRoutes);
+app.use("/api", locationRoutes);
+
 
 export default app;
