@@ -1,166 +1,224 @@
 import React, { useState } from 'react';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
-/**
- * Login Page Component
- * @param {Object} props
- * @param {Function} [props.onNavigateToSignup]
- */
-export default function Login({ onNavigateToSignup }) {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
-  });
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState(null);
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.email) {
-      newErrors.email = 'Email address is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-
-    // Clear field error on change
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-
-    setLoading(true);
-    setStatusMessage(null);
-
-    // Simulated login delay
-    setTimeout(() => {
-      setLoading(false);
-      setStatusMessage({
-        type: 'success',
-        text: 'Login successful! Welcome back.'
-      });
-    }, 1200);
+    sessionStorage.setItem('isAuthenticated', 'true');
+    navigate('/dashboard');
   };
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit} noValidate>
-      {statusMessage && (
-        <div
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '2rem 1.5rem',
+      position: 'relative',
+      backgroundColor: '#ffffff'
+    }}>
+      {/* Background Geometric Line & Circle Canvas */}
+      <svg 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}
+        viewBox="0 0 1440 720" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <path stroke="#E2E8F0" strokeOpacity="0.75" d="M-15.227 702.342H1439.7" />
+        <circle cx="711.819" cy="372.562" r="308.334" stroke="#E2E8F0" strokeOpacity="0.75" />
+        <circle cx="16.942" cy="20.834" r="308.334" stroke="#E2E8F0" strokeOpacity="0.75" />
+        <path stroke="#E2E8F0" strokeOpacity="0.75" d="M-15.227 573.66H1439.7M-15.227 164.029H1439.7" />
+        <circle cx="782.595" cy="411.166" r="308.334" stroke="#E2E8F0" strokeOpacity="0.75" />
+      </svg>
+
+      {/* Login Card Form */}
+      <form 
+        onSubmit={handleLogin}
+        style={{
+          maxWidth: '384px',
+          width: '100%',
+          textAlign: 'center',
+          border: '1px solid rgba(209, 213, 219, 0.6)',
+          borderRadius: '1rem',
+          padding: '0 2rem',
+          backgroundColor: '#ffffff',
+          position: 'relative',
+          zIndex: 10,
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+        }}
+      >
+        <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'center' }}>
+          <img 
+            src={logo} 
+            alt="StockSense Logo" 
+            style={{ 
+              width: '44px', 
+              height: '44px', 
+              objectFit: 'contain' 
+            }} 
+          />
+        </div>
+
+        <h1 style={{
+          color: '#111827',
+          fontSize: '1.875rem',
+          marginTop: '1rem',
+          fontWeight: 500,
+          letterSpacing: '-0.02em'
+        }}>
+          Login
+        </h1>
+
+        <p style={{
+          color: '#6b7280',
+          fontSize: '0.875rem',
+          marginTop: '0.5rem'
+        }}>
+          Please sign in to continue
+        </p>
+
+        {/* Email Field */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          marginTop: '2rem',
+          backgroundColor: '#ffffff',
+          border: '1px solid rgba(209, 213, 219, 0.8)',
+          height: '3rem',
+          borderRadius: '9999px',
+          overflow: 'hidden',
+          paddingLeft: '1.5rem',
+          gap: '0.5rem'
+        }}>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" clipRule="evenodd" d="M0 .55.571 0H15.43l.57.55v9.9l-.571.55H.57L0 10.45zm1.143 1.138V9.9h13.714V1.69l-6.503 4.8h-.697zM13.749 1.1H2.25L8 5.356z" fill="#6B7280"/>
+          </svg>
+          <input 
+            type="email" 
+            placeholder="Email id" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              background: 'transparent',
+              color: '#374151',
+              outline: 'none',
+              fontSize: '0.875rem',
+              width: '100%',
+              height: '100%',
+              border: 'none'
+            }}
+            required 
+          />
+        </div>
+
+        {/* Password Field */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: '1rem',
+          width: '100%',
+          backgroundColor: '#ffffff',
+          border: '1px solid rgba(209, 213, 219, 0.8)',
+          height: '3rem',
+          borderRadius: '9999px',
+          overflow: 'hidden',
+          paddingLeft: '1.5rem',
+          gap: '0.5rem'
+        }}>
+          <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z" fill="#6B7280"/>
+          </svg>
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              background: 'transparent',
+              color: '#374151',
+              outline: 'none',
+              fontSize: '0.875rem',
+              width: '100%',
+              height: '100%',
+              border: 'none'
+            }}
+            required 
+          />
+        </div>
+
+        {/* Forgot password */}
+        <div style={{
+          marginTop: '1.25rem',
+          textAlign: 'left'
+        }}>
+          <a 
+            href="#forgot" 
+            onClick={(e) => { e.preventDefault(); alert('Password reset requested.'); }}
+            style={{
+              fontSize: '0.875rem',
+              color: '#6366f1'
+            }}
+          >
+            Forgot password?
+          </a>
+        </div>
+
+        {/* Submit Button */}
+        <button 
+          type="submit" 
           style={{
-            padding: '12px 16px',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: statusMessage.type === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'var(--color-danger-bg)',
-            border: `1px solid ${statusMessage.type === 'success' ? '#10b981' : 'var(--color-danger)'}`,
-            color: statusMessage.type === 'success' ? '#34d399' : '#f87171',
-            fontSize: '0.875rem',
-            marginBottom: '8px'
+            marginTop: '0.5rem',
+            width: '100%',
+            height: '2.75rem',
+            borderRadius: '9999px',
+            color: '#ffffff',
+            backgroundColor: '#6366f1',
+            border: 'none',
+            fontSize: '0.9rem',
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'opacity 0.2s',
+            boxShadow: '0 2px 6px rgba(99, 102, 241, 0.3)'
           }}
         >
-          {statusMessage.text}
-        </div>
-      )}
-
-      <Input
-        label="Email Address"
-        id="login-email"
-        name="email"
-        type="email"
-        placeholder="name@company.com"
-        value={formData.email}
-        onChange={handleChange}
-        error={errors.email}
-        required
-        autoComplete="email"
-        leftIcon={
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-          </svg>
-        }
-      />
-
-      <Input
-        label="Password"
-        id="login-password"
-        name="password"
-        type="password"
-        placeholder="••••••••"
-        value={formData.password}
-        onChange={handleChange}
-        error={errors.password}
-        required
-        autoComplete="current-password"
-        leftIcon={
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-        }
-      />
-
-      <div className="form-options">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            name="rememberMe"
-            checked={formData.rememberMe}
-            onChange={handleChange}
-            className="checkbox-input"
-          />
-          <span>Remember for 30 days</span>
-        </label>
-        <a href="#forgot" className="forgot-password-link" onClick={(e) => e.preventDefault()}>
-          Forgot password?
-        </a>
-      </div>
-
-      <Button type="submit" fullWidth loading={loading}>
-        Sign In
-      </Button>
-
-      <div className="divider">Or continue with</div>
-
-      <div className="social-buttons">
-        <button type="button" className="social-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05" />
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335" />
-          </svg>
-          Google
+          Login
         </button>
-        <button type="button" className="social-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-          </svg>
-          GitHub
-        </button>
-      </div>
-    </form>
+
+        {/* Sign up link */}
+        <p style={{
+          color: '#6b7280',
+          fontSize: '0.875rem',
+          marginTop: '0.75rem',
+          marginBottom: '2.75rem'
+        }}>
+          Don’t have an account?{' '}
+          <Link 
+            to="/signup" 
+            style={{
+              color: '#6366f1',
+              fontWeight: 500
+            }}
+          >
+            Sign up
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }
