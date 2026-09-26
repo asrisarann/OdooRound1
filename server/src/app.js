@@ -6,7 +6,7 @@ import locationRoutes from "./modules/location/location.routes.js";
 import receiptRoutes from "./modules/receipt/receipt.routes.js";
 import stockRoutes from "./modules/stock/stock.route.js";
 import deliveryRoutes from "./modules/delivery/delivery.route.js";
-
+import { userMiddleware } from "./middleware/user.middleware.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -16,11 +16,11 @@ app.get("/", (req, res) => {
 });
 
 // API Routes
-app.use("/api", warehouseRoutes);
-app.use("/api", locationRoutes);
-app.use("/api", receiptRoutes);
-app.use("/api", stockRoutes);
-app.use("/api", deliveryRoutes);
+app.use("/api", userMiddleware, warehouseRoutes);
+app.use("/api", userMiddleware, locationRoutes);
+app.use("/api", userMiddleware, receiptRoutes);
+app.use("/api", userMiddleware, stockRoutes);
+app.use("/api", userMiddleware, deliveryRoutes);
 
 
 export default app;
